@@ -117,6 +117,10 @@ for($i=0;$i<$disp_num;$i++){
         ?>
             <a href="todo_list.php?page=<?php print ($page-1); ?>" style="color: #114747;font-weight:bold;">＜＜前の５件</a>
         <?php
+        }else{
+        ?>
+            <div style="width: 100px;">&nbsp;</div>
+        <?php
         }
         ?>
     </div>
@@ -132,6 +136,10 @@ for($i=0;$i<$disp_num;$i++){
         if($page < $max_page){
         ?>
             <a href="todo_list.php?page=<?php print ($page+1); ?>" style="color: #114747;font-weight:bold;">次の５件＞＞</a>
+        <?php
+        }else{
+        ?>
+            <div style="width: 100px;">&nbsp;</div>
         <?php
         }
         ?>
