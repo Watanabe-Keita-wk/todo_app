@@ -21,7 +21,8 @@ $updated_at=date("Y-m-d H:i:s");
 
 if($title==''){
     print '<h3 style="color: #e26a6a;text-align: center;">タイトルを入力してください。</h3>';
-}elseif(mb_strlen($title,'UTF-8') > 30){
+}
+if(mb_strlen($title,'UTF-8') > 30){
     print '<h3 style="color: #e26a6a;text-align: center;">タイトルは30文字以内におさめてください</h3>';
 }
 
