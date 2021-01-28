@@ -12,6 +12,7 @@
 <?php
     session_start();
     $_SESSION['page']=true;
+    require_once('common.php');
 
 try{
     $id=$_GET['id'];
@@ -41,21 +42,9 @@ try{
 
 <h2 class="texts">以下の内容を削除します。</h2>
 
-<table>
-    <colgroup span="4"></colgroup>
-    <tr>
-        <th>ID</th>
-        <th>タイトル</th>
-        <th>内容</th>
-        <th>作成日時</th>
-    </tr>
-    <tr>
-        <td><?php print $id; ?></td>
-        <td><?php print $title; ?></td>
-        <td><?php print $content; ?></td>
-        <td><?php print $created_at; ?></td>
-    </tr>
-</table>
+<?php
+display_table($title,$content,$created_at,null);
+?>
 
 <div class="box_button">
     <form method="post" action="delete_done.php">

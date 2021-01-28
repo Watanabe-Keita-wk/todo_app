@@ -53,19 +53,9 @@ if(!empty($_SESSION['page']) && $_SESSION['page']==true){
 
     <h2 class="texts">以下の内容で登録完了しました。</h2>
 
-    <table>
-        <colgroup span="4"></colgroup>
-        <tr>
-            <th>タイトル</th>
-            <th>内容</th>
-            <th>最終編集日時</th>
-        </tr>
-        <tr>
-            <td><?php print $title ?></td>
-            <td><?php print $content ?></td>
-            <td><?php print $updated_at ?></td>
-        </tr>
-    </table>
+<?php
+display_table($title,$content,null,$updated_at);
+?>
 
     <form action="todo_list.php" style="text-align: center;margin-top: 30px;">
         <button class="button" type="submit" style="padding: 10px;font-size: 16px;">一覧へ戻る</button>

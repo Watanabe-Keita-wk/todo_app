@@ -20,16 +20,7 @@ $title=$post['title'];
 $content=$post['content'];
 $created_at=date("Y-m-d H:i:s");
 
-if($title==''){
-    print '<h3 style="color: #e26a6a;text-align: center;">タイトルを入力してください。</h3>';
-}
-if(mb_strlen($title,'UTF-8') > 30){
-    print '<h3 style="color: #e26a6a;text-align: center;">タイトルは30文字以内におさめてください</h3>';
-}
-
-if($content==''){
-    print '<h3 style="color: #e26a6a;text-align: center;">内容を入力してください。</h3>';
-}
+post_check($title,$content);
 
 if($title=='' || mb_strlen($title,'UTF-8') > 30 || $content==''){
     print '<form style="text-align: center;">';
@@ -41,20 +32,9 @@ if($title=='' || mb_strlen($title,'UTF-8') > 30 || $content==''){
     $_SESSION['page']=true;
 ?>
     <h2 class="texts">以下の内容を登録します。</h2>
-
-    <table>
-        <colgroup span="4"></colgroup>
-        <tr>
-            <th>タイトル</th>
-            <th>内容</th>
-            <th>作成日時</th>
-        </tr>
-        <tr>
-            <td><?php print $title ?></td>
-            <td><?php print $content ?></td>
-            <td><?php print $created_at ?></td>
-        </tr>
-    </table>
+<?php
+display_table($title,$content,$created_at,null);
+?>
 
     <div class="box_button">
         <form method="post" action="cre_done.php">
