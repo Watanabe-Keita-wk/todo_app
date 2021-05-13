@@ -1,6 +1,3 @@
-<?php
-    require_once("class.php")
-?>
 <!doctype html>
 <html lang="ja">
 <head>
@@ -17,34 +14,70 @@
 </h1>
 
 <?php
+class Db
+{
+    private $sql;
 
+    public static function Select($sql, $data_content = array())
+    {
+        //データベースからidの羅列を取得
+        $dsn = 'mysql:dbname=todo;host=localhost;charset=utf8';
+        $user = 'root';
+        $password = '';
+        $dbh = new PDO($dsn, $user, $password);
+        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $stmt = $dbh->prepare($sql);
+        if(strpos($sql, "?") == true){
+            for($i = 0; $i < substr_count($sql, "?"); $i++){
+                $data[$i] = $data_content[$i];
+            }
+            $stmt->execute($data);
+            $rec = $stmt->fetch(PDO::FETCH_ASSOC);
+        }else{
+            $stmt->execute();
+            $rec = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        $dbh=null;
+        return $rec;
+    }
+}
 try
 {
-    //データベースからidの羅列を取得
     $sql = 'SELECT id FROM posts WHERE 1';
     $rec = Db::Select($sql);
     //idを配列につっこむ
     $id_list=array();
 
     foreach($rec as $value){
-        $id_list[] = $value['id'];
+        $id_list[]=$value['id'];
     }
 
     //ページング機能を追加
-    list($view_page, $page, $max_page) = Feature::Paging($id_list, $_GET['page']);
+    $max=5;
+    $id_sum=count($id_list);
+    $max_page=ceil($id_sum/$max);
+    if(isset($_GET['page'])==false){
+        $page=1;
+    }else{
+        $page=$_GET['page'];
+    }
+
+    $start=$max*($page - 1);
+    $view_page=array_splice($id_list,$start,$max,true);
 
     //ページに表示する情報を取得
     foreach($view_page as $val){
         $sql='SELECT id,title,content,created_at,updated_at FROM posts WHERE id=?';
         $data[0]=$val;
-        $posts=Db::Select($sql, $data);
-
+        $posts = Db::Select($sql, $data);
         $post_title[]=$posts['title'];
         $post_content[]=$posts['content'];
         $post_created_at[]=$posts['created_at'];
         $post_updated_at[]=$posts['updated_at'];
     }
 
+    $dbh=null;
 }catch(Exception $e){
     print 'ただいま障害により大変ご迷惑をお掛けしております。';
     exit();
@@ -95,7 +128,15 @@ for($i=0;$i<$disp_num;$i++){
     <div>
         <?php
         //ページ移動する部分を追加
-            Feature::PageBefore($page);
+        if($page > 1){
+        ?>
+            <a href="todo_list.php?page=<?php print ($page-1); ?>" style="color: #114747;font-weight:bold;">＜＜前の５件</a>
+        <?php
+        }else{
+        ?>
+            <div style="width: 100px;">&nbsp;</div>
+        <?php
+        }
         ?>
     </div>
 
@@ -107,7 +148,15 @@ for($i=0;$i<$disp_num;$i++){
 
     <div>
         <?php
-            Feature::PageAfter($page, $max_page);
+        if($page < $max_page){
+        ?>
+            <a href="todo_list.php?page=<?php print ($page+1); ?>" style="color: #114747;font-weight:bold;">次の５件＞＞</a>
+        <?php
+        }else{
+        ?>
+            <div style="width: 100px;">&nbsp;</div>
+        <?php
+        }
         ?>
     </div>
 </div>
